@@ -12,7 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 
-class ModalDropDown extends Component {
+class BusModalDropDown extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +26,7 @@ class ModalDropDown extends Component {
     let newData = [];
     if (searchText) {
       newData = data.filter(function (item) {
-        const itemData = item.locationName.toUpperCase();
+        const itemData = item.busName.toUpperCase();
         const textData = searchText.toUpperCase();
         return itemData.startsWith(textData);
       });
@@ -61,7 +61,7 @@ class ModalDropDown extends Component {
                 ? lightStyles.listTextViewStyle
                 : darkStyles.listTextViewStyle
             }>
-            {item.locationName}
+            {item.busName}
           </Text>
         </View>
       </TouchableOpacity>
@@ -501,4 +501,4 @@ const darkStyles = StyleSheet.create({
   },
 });
 
-export default ModalDropDown;
+export default BusModalDropDown;

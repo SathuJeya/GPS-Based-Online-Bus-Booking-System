@@ -1,13 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text, TextInput, ScrollView} from 'react-native';
 import {Context as LocationContext} from '../../context/locationContext';
 import {Context as BusContext} from '../../context/busContext';
 import {Context as TripContext} from '../../context/tripContext';
-import {Spacer0} from '../components/Spacer';
+import {Context as UserContext} from '../../context/userContext';
+import {Spacer, Spacer0} from '../components/Spacer';
 import {ActivityIndicator, Button, Snackbar} from 'react-native-paper';
-import {Context} from '../../context/locationContext';
+import {Context} from '../../context/tripContext';
 import ModalDropDown from '../components/ModalDropDown';
-
+import BusModalDropDown from '../components/BusModalDropDown';
+import DriverModalDropDown from '../components/DriverModalDropDown';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-datepicker';
 const AddTrip = ({navigation}) => {
   const {
     state: tripState,
@@ -17,51 +21,105 @@ const AddTrip = ({navigation}) => {
   } = useContext(TripContext);
 
   const {state: locationState, getLocationList} = useContext(LocationContext);
-  const {state: busState, getBus} = useContext(BusContext);
-  const {state} = useContext(Context);
+  const {state: busState, getBusList} = useContext(BusContext);
+  const {state: userState, getDriverList} = useContext(UserContext);
+  // const {state} = useContext(Context);
 
-  const [data, setData] = useState({busName: '', type: '', busNumber: ''});
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisible3, setModalVisible3] = useState(false);
+  const [modalVisible4, setModalVisible4] = useState(false);
   const [countrySelectedFlag, setCountrySelectedFlag] = useState(null);
+  const [countrySelectedFlag2, setCountrySelectedFlag2] = useState(null);
+  const [countrySelectedFlag3, setCountrySelectedFlag3] = useState(null);
+  const [countrySelectedFlag4, setCountrySelectedFlag4] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedLocation2, setSelectedLocation2] = useState(null);
+  const [selectedLocation3, setSelectedLocation3] = useState(null);
+  const [selectedLocation4, setSelectedLocation4] = useState(null);
   const [loader, setLoader] = useState(false);
   const [snack, setSnack] = useState(false);
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [seat, setSeat] = useState();
+  const [data, setData] = useState({
+    from: selectedLocation,
+    to: selectedLocation2,
+    driver: 'ffh',
+    bus: selectedLocation3,
+    noOfSeat: seat,
+    date: date,
+  });
 
   useEffect(() => {
     getLocationList();
+    getBusList();
+    getDriverList();
   }, []);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+  const toggleModal2 = () => {
+    setModalVisible2(!modalVisible2);
+  };
+  const toggleModal3 = () => {
+    setModalVisible3(!modalVisible3);
+  };
+  const toggleModal4 = () => {
+    setModalVisible4(!modalVisible4);
+  };
 
-  const setSelectedIndex1 = (item) => {
+  const setSelectedIndex = (item) => {
     setCountrySelectedFlag(true);
     setSelectedLocation(item.locationName);
     setModalVisible(false);
   };
   const setSelectedIndex2 = (item) => {
-    setCountrySelectedFlag(true);
-    setSelectedLocation(item.locationName);
-    setModalVisible(false);
+    setCountrySelectedFlag2(true);
+    setSelectedLocation2(item.locationName);
+    setModalVisible2(false);
+  };
+  const setSelectedIndex3 = (item) => {
+    setCountrySelectedFlag3(true);
+    setSelectedLocation3(item.busName);
+    setModalVisible3(false);
+  };
+  const setSelectedIndex4 = (item) => {
+    setCountrySelectedFlag4(true);
+    setSelectedLocation4(item.name);
+    setModalVisible4(false);
   };
 
   const addButtonAction = () => {
-    if (data.busName === '') {
-      add_error({error: 'Bus Name Required'});
+    // alert(data.date);
+    if (selectedLocation === '') {
+      add_error({error: 'From Required'});
       setSnack(true);
-      console.log('ra');
-    } else if (data.type === '') {
-      add_error({error: 'Enter the bus Type'});
+    } else if (selectedLocation2 === '') {
+      add_error({error: 'To Required'});
       setSnack(true);
-      console.log('ra');
-    } else if (data.busName === '') {
-      add_error({error: 'Bus Number Required'});
+    } else if (selectedLocation3 === '') {
+      add_error({error: 'Bus Required'});
       setSnack(true);
-      console.log('ra');
+    } else if (selectedLocation4 === '') {
+      add_error({error: 'Bus Required'});
+      setSnack(true);
+    } else if (date === '') {
+      add_error({error: 'Bus Required'});
+      setSnack(true);
+    } else if (seat === '') {
+      add_error({error: 'Bus Required'});
+      setSnack(true);
     } else {
       setLoader(true);
-      addTrip(data);
+      addTrip(
+        selectedLocation,
+        selectedLocation2,
+        selectedLocation4,
+        selectedLocation3,
+        seat,
+        date,
+      );
       setSnack(true);
       setLoader(false);
       // setSnack(false);
@@ -69,54 +127,126 @@ const AddTrip = ({navigation}) => {
   };
 
   return (
-    <View
-      style={{
-        // marginTop: 100,
-        flex: 1,
-        height: '100%',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}>
-      <>
-        <Spacer0 />
-        <View style={styles.container}>
-          <Spacer0 />
+    <ScrollView>
+      <View
+        style={{
+          // marginTop: 100,
+          flex: 1,
+          height: '100%',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}>
+        <>
+          <View style={styles.container}>
+            <Spacer0 />
+            <Text>Date</Text>
+            <View>
+              <DatePicker
+                style={{width: 200}}
+                date={date}
+                mode="date"
+                placeholder="select date"
+                format="YYYY-MM-DD"
+                minDate={new Date(Date.now())}
+                maxDate="2025-06-01"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0,
+                  },
+                  dateInput: {
+                    marginLeft: 36,
+                  },
+                  // ... You can check the source to find the other keys.
+                }}
+                onDateChange={(date) => {
+                  setDate(date);
+                }}
+              />
+            </View>
+            <Spacer0 />
+            <Text>From</Text>
+            <ModalDropDown
+              lightMode={true}
+              dataSource={locationState.location}
+              modalVisible={modalVisible}
+              selectedFlag={countrySelectedFlag}
+              toggleModal={toggleModal}
+              selectedValue={selectedLocation}
+              selecteLabel={'From'}
+              setSelectedIndex={setSelectedIndex}
+            />
 
-          <ModalDropDown
-            lightMode={true}
-            dataSource={state.location}
-            modalVisible={modalVisible}
-            selectedFlag={countrySelectedFlag}
-            toggleModal={toggleModal}
-            selectedValue={selectedLocation1}
-            selecteLabel={'Select User'}
-            setSelectedIndex={setSelectedIndex1}
-          />
-
-          <ModalDropDown
-            lightMode={true}
-            dataSource={state.location}
-            modalVisible={modalVisible}
-            selectedFlag={countrySelectedFlag}
-            toggleModal={toggleModal}
-            selectedValue={selectedLocation2}
-            selecteLabel={'Select User'}
-            setSelectedIndex={setSelectedIndex2}
-          />
-
-          {!loader ? (
-            <Button onPress={() => addButtonAction()} mode="contained">
-              Add
-            </Button>
-          ) : (
-            <ActivityIndicator animating={true} />
-          )}
-        </View>
-        {/* <Snackbar visible={snack} onDismiss={() => setSnack(false)}>
-          {state.errorMessage}
-        </Snackbar> */}
-      </>
-    </View>
+            <Spacer0 />
+            <Text>To</Text>
+            <ModalDropDown
+              lightMode={true}
+              dataSource={locationState.location}
+              modalVisible={modalVisible2}
+              selectedFlag={countrySelectedFlag2}
+              toggleModal={toggleModal2}
+              selectedValue={selectedLocation2}
+              selecteLabel={'To'}
+              setSelectedIndex={setSelectedIndex2}
+            />
+            <Spacer0 />
+            <Text>Bus</Text>
+            <BusModalDropDown
+              lightMode={true}
+              dataSource={busState.bus}
+              modalVisible={modalVisible3}
+              selectedFlag={countrySelectedFlag3}
+              toggleModal={toggleModal3}
+              selectedValue={selectedLocation3}
+              selecteLabel={'Select Bus'}
+              setSelectedIndex={setSelectedIndex3}
+            />
+            <Spacer0 />
+            <Text>Driver</Text>
+            <DriverModalDropDown
+              lightMode={true}
+              dataSource={userState.driverList}
+              modalVisible={modalVisible4}
+              selectedFlag={countrySelectedFlag4}
+              toggleModal={toggleModal4}
+              selectedValue={selectedLocation4}
+              selecteLabel={'Select Driver'}
+              setSelectedIndex={setSelectedIndex4}
+            />
+            <Spacer0 />
+            <Text>Number Of Seat</Text>
+            <TextInput
+              placeholder="Number of Seat"
+              keyboardType={'number-pad'}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: 'black',
+                marginTop: 10,
+              }}
+              onChangeText={(text) => setSeat(text)}
+            />
+            <Spacer0 />
+            {!loader ? (
+              <Button onPress={() => addButtonAction()} mode="contained">
+                Add
+              </Button>
+            ) : (
+              <ActivityIndicator animating={true} />
+            )}
+            <Spacer0 />
+          </View>
+          <Snackbar visible={snack} onDismiss={() => setSnack(false)}>
+            {tripState.errorMessage}
+          </Snackbar>
+        </>
+      </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({

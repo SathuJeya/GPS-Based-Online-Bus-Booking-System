@@ -131,7 +131,7 @@ const roleScreen = async (token) => {
     {headers: {Authorization: `Bearer ${token}`}},
   );
   if (response.data.role === 'user') {
-    navigate('adminFlow');
+    navigate('userFlow');
   } else if (response.data.role === 'conductor') {
     navigate('adminFlow');
   } else if (response.data.role === 'admin') {
@@ -178,7 +178,6 @@ const getDriverList = (dispatch) => {
     const filter = await response.data.filter(
       (data) => data.role.name === 'conductor',
     );
-    await console.log({sss: response.data});
     await dispatch({type: 'get_driver_list', payload: filter});
   };
 };

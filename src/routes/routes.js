@@ -31,6 +31,9 @@ import DriverList from '../screens/admin/DriverList';
 import LocationList from '../screens/admin/LocationList';
 import TripList from '../screens/admin/TripList';
 
+import FindTrip from '../screens/user/FindTrip';
+import MyTrip from '../screens/user/MyTrip';
+
 import Account from '../screens/admin/Account';
 import React from 'react';
 
@@ -39,6 +42,10 @@ const iconSize = 24;
 const tripInfo = createStackNavigator({
   TripList: {screen: TripList},
   AddTrip: {screen: AddTrip},
+});
+const myTripInfo = createStackNavigator({
+  FindTrip: {screen: FindTrip},
+  MyTrip: {screen: MyTrip},
 });
 const locationInfo = createStackNavigator({
   LocationList: {screen: LocationList},
@@ -54,11 +61,11 @@ const driverInfo = createStackNavigator({
 });
 const switchNavigator = createSwitchNavigator(
   {
-    // ResolveAuth: ResolveAuthScreen,
-    // loginFlow: createStackNavigator({
-    //   SignIn: SignIn,
-    //   SignUp: SignUp,
-    // }),
+    ResolveAuth: ResolveAuthScreen,
+    loginFlow: createStackNavigator({
+      SignIn: SignIn,
+      SignUp: SignUp,
+    }),
 
     adminFlow: createMaterialBottomTabNavigator(
       // createBottomTabNavigator
@@ -106,7 +113,7 @@ const switchNavigator = createSwitchNavigator(
         Account: {
           screen: Account,
           navigationOptions: {
-            tabBarLabel: 'Info',
+            tabBarLabel: 'Account',
             tabBarIcon: ({tintColor}) => (
               <MaterialCommunityIcons
                 name="account"
@@ -119,6 +126,49 @@ const switchNavigator = createSwitchNavigator(
       },
       {
         initialRouteName: 'TripList',
+        activeColor: '#f0edf6',
+        inactiveColor: '#9f8de2',
+        // barStyle: {backgsroundColor: '#694fad'},
+      },
+    ),
+    userFlow: createMaterialBottomTabNavigator(
+      // createBottomTabNavigator
+      {
+        FindTrip: {
+          screen: FindTrip,
+          navigationOptions: {
+            tabBarLabel: 'Find Trip',
+            tabBarIcon: ({tintColor}) => (
+              <Entypo name="flow-parallel" color={tintColor} size={iconSize} />
+            ),
+          },
+        },
+        MyTrip: {
+          screen: MyTrip,
+          navigationOptions: {
+            tabBarLabel: 'My Trip',
+            tabBarIcon: ({tintColor}) => (
+              <FontAwesome5 name="sort-amount-down" color={tintColor} size={iconSize} />
+            ),
+          },
+        },
+
+        Account: {
+          screen: Account,
+          navigationOptions: {
+            tabBarLabel: 'Account',
+            tabBarIcon: ({tintColor}) => (
+              <MaterialCommunityIcons
+                name="account"
+                color={tintColor}
+                size={iconSize}
+              />
+            ),
+          },
+        },
+      },
+      {
+        initialRouteName: 'FindTrip',
         activeColor: '#f0edf6',
         inactiveColor: '#9f8de2',
         // barStyle: {backgsroundColor: '#694fad'},

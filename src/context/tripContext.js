@@ -27,18 +27,29 @@ const clear_error_message = (dispatch) => () => {
 };
 
 const addTrip = (dispatch) => {
-  return async (location) => {
+  return async (
+    selectedLocation,
+    selectedLocation2,
+    selectedLocation4,
+    selectedLocation3,
+    seat,
+    date,
+  ) => {
     const response = await jsonServer
       .post('/api/trip', {
-        locationName: location,
+        from: selectedLocation,
+        to: selectedLocation2,
+        driver: selectedLocation4,
+        bus: selectedLocation3,
+        noOfSeat: seat,
+        date: date,
       })
       .then(() => {
         dispatch({
           type: 'add_error',
           payload: 'success',
         });
-
-        navigate('LocationList');
+        navigate('TripList');
       })
       .catch((err) =>
         dispatch({
@@ -53,7 +64,7 @@ const addTrip = (dispatch) => {
 const getTripList = (dispatch) => {
   return async () => {
     const response = await jsonServer.get('/api/trip');
-    await dispatch({type: 'locationList', payload: response.data});
+    await dispatch({type: 'tripList', payload: response.data});
   };
 };
 
