@@ -54,11 +54,11 @@ const driverInfo = createStackNavigator({
 });
 const switchNavigator = createSwitchNavigator(
   {
-    ResolveAuth: ResolveAuthScreen,
-    loginFlow: createStackNavigator({
-      SignIn: SignIn,
-      SignUp: SignUp,
-    }),
+    // ResolveAuth: ResolveAuthScreen,
+    // loginFlow: createStackNavigator({
+    //   SignIn: SignIn,
+    //   SignUp: SignUp,
+    // }),
 
     adminFlow: createMaterialBottomTabNavigator(
       // createBottomTabNavigator

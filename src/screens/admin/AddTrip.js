@@ -1,24 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  List,
-} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import TripList from './TripList';
+import {View, StyleSheet} from 'react-native';
 import {Context as LocationContext} from '../../context/locationContext';
 import {Context as BusContext} from '../../context/busContext';
 import {Context as TripContext} from '../../context/tripContext';
-import {Context as UserContext} from '../../context/userContext';
-import {NavigationEvents} from 'react-navigation';
 import {Spacer0} from '../components/Spacer';
-import {Form, TextInput} from '../../helper/react-native-autofocus';
-import {Picker} from '@react-native-community/picker';
 import {ActivityIndicator, Button, Snackbar} from 'react-native-paper';
-import {Context} from '../../context/userContext';
+import {Context} from '../../context/locationContext';
+import ModalDropDown from '../components/ModalDropDown';
 
 const AddTrip = ({navigation}) => {
   const {
@@ -27,21 +15,36 @@ const AddTrip = ({navigation}) => {
     add_error,
     clear_error_message,
   } = useContext(TripContext);
+
   const {state: locationState, getLocationList} = useContext(LocationContext);
   const {state: busState, getBus} = useContext(BusContext);
-  const {state: userState, getDriverList} = useContext(Context);
+  const {state} = useContext(Context);
+
+  const [data, setData] = useState({busName: '', type: '', busNumber: ''});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [countrySelectedFlag, setCountrySelectedFlag] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [loader, setLoader] = useState(false);
+  const [snack, setSnack] = useState(false);
 
   useEffect(() => {
     getLocationList();
-    // const listiner = navigation.addListener('willFocus', async () => {
-    //   await getLocationList();
-    // });
   }, []);
-  const listiner = navigation.addListener('willFocus', async () => {
-    await getLocationList();
-  });
 
-  const [data, setData] = useState({busName: '', type: '', busNumber: ''});
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const setSelectedIndex1 = (item) => {
+    setCountrySelectedFlag(true);
+    setSelectedLocation(item.locationName);
+    setModalVisible(false);
+  };
+  const setSelectedIndex2 = (item) => {
+    setCountrySelectedFlag(true);
+    setSelectedLocation(item.locationName);
+    setModalVisible(false);
+  };
 
   const addButtonAction = () => {
     if (data.busName === '') {
@@ -64,16 +67,6 @@ const AddTrip = ({navigation}) => {
       // setSnack(false);
     }
   };
-  const ddd = locationState.location;
-  const [loader, setLoader] = useState(false);
-  const [snack, setSnack] = useState(false);
-
-  const loadUserTypes = () => {
-    return array.map((user) => (
-      <Picker.Item label={user.locationName} value={user.id} />
-    ));
-  };
-  const {selectedUserType, setSelectedUserType} = useState({name: ''});
 
   return (
     <View
@@ -84,64 +77,33 @@ const AddTrip = ({navigation}) => {
         flexDirection: 'column',
         justifyContent: 'space-between',
       }}>
-      {/*</List>*/}
-      <Text>sd</Text>
-      <Button>Start to get location in background and store</Button>
-      <Button>stop to get location </Button>
-      {locationState.location &&
-        // const list =
-        (() => {
-          return locationState.location.map((element) => {
-            return (
-              <View style={{margin: 10}}>
-                <Text>{element.locationName}</Text>
-                <Text>{element.createAt}</Text>
-              </View>
-            );
-          });
-        })}
-      <Text>{JSON.stringify(tripState)}</Text>
-      <Text>{JSON.stringify(locationState)}</Text>
-      <NavigationEvents onWillBlur={clear_error_message} />
-
       <>
         <Spacer0 />
         <View style={styles.container}>
-          <Form>
-
-            <FlatList
-              data={locationState.location}
-              renderItem={({item}) => <Text>{item.locationName}</Text>}
-              keyExtractor={(item) => item.id}
-            />
-            <View
-              style={{
-                borderColor: 'grey',
-                borderWidth: 1,
-                borderRadius: 5,
-                backgroundColor: '#ffffff10',
-                marginTop: 10,
-              }}>
-              <Picker
-                selectedValue={data.bloodType}
-                style={{
-                  height: 50,
-                  width: '100%',
-                  margin: 2,
-                  color: '#00000090',
-                }}
-                onValueChange={(itemValue, itemIndex) =>
-                  setData({...data, bloodType: itemValue})
-                }>
-                {/*{Array.map((item) => (*/}
-                {/*  <Picker.Item label="O positive" value="O+" />*/}
-                {/*))}*/}
-                <Picker.Item label="colombo" value="O-" />
-                <Picker.Item label="kandy" value="O-" />
-              </Picker>
-            </View>
-          </Form>
           <Spacer0 />
+
+          <ModalDropDown
+            lightMode={true}
+            dataSource={state.location}
+            modalVisible={modalVisible}
+            selectedFlag={countrySelectedFlag}
+            toggleModal={toggleModal}
+            selectedValue={selectedLocation1}
+            selecteLabel={'Select User'}
+            setSelectedIndex={setSelectedIndex1}
+          />
+
+          <ModalDropDown
+            lightMode={true}
+            dataSource={state.location}
+            modalVisible={modalVisible}
+            selectedFlag={countrySelectedFlag}
+            toggleModal={toggleModal}
+            selectedValue={selectedLocation2}
+            selecteLabel={'Select User'}
+            setSelectedIndex={setSelectedIndex2}
+          />
+
           {!loader ? (
             <Button onPress={() => addButtonAction()} mode="contained">
               Add
@@ -150,9 +112,9 @@ const AddTrip = ({navigation}) => {
             <ActivityIndicator animating={true} />
           )}
         </View>
-        <Snackbar visible={snack} onDismiss={() => setSnack(false)}>
-          {/*{state.errorMessage}*/}
-        </Snackbar>
+        {/* <Snackbar visible={snack} onDismiss={() => setSnack(false)}>
+          {state.errorMessage}
+        </Snackbar> */}
       </>
     </View>
   );
