@@ -10,6 +10,8 @@ const tripReducer = (state, action) => {
       return {...state, errorMessage: ''};
     case 'tripList':
       return {...state, trip: action.payload};
+    case 'tripListDetail':
+      return {...state, tripDetail: action.payload};
     default:
       return state;
   }
@@ -66,11 +68,25 @@ const getTripList = (dispatch) => {
     // alert(date)
     if (date) {
       const response = await jsonServer.get('/api/trip');
-      const filter = await response.data.filter((data) => data.date === date);
+      const filter = await response.data.filter(
+        (data) => data.driver._id === date,
+      );
       await dispatch({type: 'tripList', payload: filter});
     } else {
       const response = await jsonServer.get('/api/trip');
       await dispatch({type: 'tripList', payload: response.data});
+    }
+  };
+};
+
+const getTripDetail = (dispatch) => {
+  return async (id) => {
+    // alert(date)
+    if (id) {
+      const response = await jsonServer.get(`/api/trip/${id}`);
+      await dispatch({type: 'tripListDetail', payload: response.data});
+    } else {
+      console.log('id not found');
     }
   };
 };
@@ -82,6 +98,7 @@ export const {Provider, Context} = createDataContext(
     clear_error_message,
     addTrip,
     getTripList,
+    getTripDetail,
   },
   {},
 );

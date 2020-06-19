@@ -133,7 +133,7 @@ const roleScreen = async (token) => {
   if (response.data.role === 'user') {
     navigate('userFlow');
   } else if (response.data.role === 'conductor') {
-    navigate('adminFlow');
+    navigate('driverFlow');
   } else if (response.data.role === 'admin') {
     navigate('adminFlow');
   }

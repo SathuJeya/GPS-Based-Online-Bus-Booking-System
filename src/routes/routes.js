@@ -35,6 +35,9 @@ import FindTrip from '../screens/user/FindTrip';
 import MyTrip from '../screens/user/MyTrip';
 import FindTripList from '../screens/user/FindTripList';
 
+import MyRides from '../screens/driver/MyRides';
+import RideDetail from '../screens/driver/RideDetail';
+
 import Account from '../screens/admin/Account';
 import React from 'react';
 
@@ -59,6 +62,11 @@ const busInfo = createStackNavigator({
 const driverInfo = createStackNavigator({
   DriverList: {screen: DriverList},
   AddDriver: {screen: AddDriver},
+});
+
+const rideInfo = createStackNavigator({
+  MyRides: {screen: MyRides},
+  RideDetail: {screen: RideDetail},
 });
 const switchNavigator = createSwitchNavigator(
   {
@@ -174,6 +182,39 @@ const switchNavigator = createSwitchNavigator(
       },
       {
         initialRouteName: 'FindTrip',
+        activeColor: '#f0edf6',
+        inactiveColor: '#9f8de2',
+        // barStyle: {backgsroundColor: '#694fad'},
+      },
+    ),
+    driverFlow: createMaterialBottomTabNavigator(
+      // createBottomTabNavigator
+      {
+        MyRides: {
+          screen: rideInfo,
+          navigationOptions: {
+            tabBarLabel: 'My Rides',
+            tabBarIcon: ({tintColor}) => (
+              <Entypo name="flow-parallel" color={tintColor} size={iconSize} />
+            ),
+          },
+        },
+        Account: {
+          screen: Account,
+          navigationOptions: {
+            tabBarLabel: 'Account',
+            tabBarIcon: ({tintColor}) => (
+              <MaterialCommunityIcons
+                name="account"
+                color={tintColor}
+                size={iconSize}
+              />
+            ),
+          },
+        },
+      },
+      {
+        initialRouteName: 'MyRides',
         activeColor: '#f0edf6',
         inactiveColor: '#9f8de2',
         // barStyle: {backgsroundColor: '#694fad'},
