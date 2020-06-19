@@ -33,6 +33,7 @@ import TripList from '../screens/admin/TripList';
 
 import FindTrip from '../screens/user/FindTrip';
 import MyTrip from '../screens/user/MyTrip';
+import FindTripList from '../screens/user/FindTripList';
 
 import Account from '../screens/admin/Account';
 import React from 'react';
@@ -43,9 +44,9 @@ const tripInfo = createStackNavigator({
   TripList: {screen: TripList},
   AddTrip: {screen: AddTrip},
 });
-const myTripInfo = createStackNavigator({
+const findTripInfo = createStackNavigator({
   FindTrip: {screen: FindTrip},
-  MyTrip: {screen: MyTrip},
+  FindTripList: {screen: FindTripList},
 });
 const locationInfo = createStackNavigator({
   LocationList: {screen: LocationList},
@@ -135,7 +136,7 @@ const switchNavigator = createSwitchNavigator(
       // createBottomTabNavigator
       {
         FindTrip: {
-          screen: FindTrip,
+          screen: findTripInfo,
           navigationOptions: {
             tabBarLabel: 'Find Trip',
             tabBarIcon: ({tintColor}) => (
@@ -148,7 +149,11 @@ const switchNavigator = createSwitchNavigator(
           navigationOptions: {
             tabBarLabel: 'My Trip',
             tabBarIcon: ({tintColor}) => (
-              <FontAwesome5 name="sort-amount-down" color={tintColor} size={iconSize} />
+              <FontAwesome5
+                name="sort-amount-down"
+                color={tintColor}
+                size={iconSize}
+              />
             ),
           },
         },

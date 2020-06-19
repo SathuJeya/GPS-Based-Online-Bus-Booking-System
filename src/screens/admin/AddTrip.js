@@ -39,7 +39,7 @@ const AddTrip = ({navigation}) => {
   const [selectedLocation4, setSelectedLocation4] = useState(null);
   const [loader, setLoader] = useState(false);
   const [snack, setSnack] = useState(false);
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState();
   const [seat, setSeat] = useState();
   const [data, setData] = useState({
     from: selectedLocation,

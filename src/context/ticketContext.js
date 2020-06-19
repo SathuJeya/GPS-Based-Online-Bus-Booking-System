@@ -2,14 +2,14 @@ import createDataContext from './createDataContext';
 import jsonServer from '../api/jsonServer';
 import {navigate} from '../routes/navigationRef';
 
-const tripReducer = (state, action) => {
+const ticketReducer = (state, action) => {
   switch (action.type) {
     case 'add_error':
       return {...state, errorMessage: action.payload};
     case 'clear_error_message':
       return {...state, errorMessage: ''};
-    case 'tripList':
-      return {...state, trip: action.payload};
+    case 'ticketList':
+      return {...state, ticket: action.payload};
     default:
       return state;
   }
@@ -26,30 +26,20 @@ const clear_error_message = (dispatch) => () => {
   dispatch({type: 'clear_error_message'});
 };
 
-const addTrip = (dispatch) => {
-  return async (
-    selectedLocation,
-    selectedLocation2,
-    selectedLocation4,
-    selectedLocation3,
-    seat,
-    date,
-  ) => {
+const addTicket = (dispatch) => {
+  return async (trip, tripUser, status) => {
     const response = await jsonServer
-      .post('/api/trip', {
-        from: selectedLocation,
-        to: selectedLocation2,
-        driver: selectedLocation4,
-        bus: selectedLocation3,
-        noOfSeat: seat,
-        date: date,
+      .post('/api/ticket', {
+        trip: trip,
+        tripUser: tripUser,
+        status: status,
       })
       .then(() => {
         dispatch({
           type: 'add_error',
           payload: 'success',
         });
-        navigate('TripList');
+        navigate('MyTrip');
       })
       .catch((err) =>
         dispatch({
@@ -57,31 +47,32 @@ const addTrip = (dispatch) => {
           payload: 'something wrong',
         }),
       );
-    await getTripList();
   };
 };
 
-const getTripList = (dispatch) => {
+const getTicektList = (dispatch) => {
   return async (date) => {
     // alert(date)
     if (date) {
-      const response = await jsonServer.get('/api/trip');
-      const filter = await response.data.filter((data) => data.date === date);
-      await dispatch({type: 'tripList', payload: filter});
+      const response = await jsonServer.get('/api/ticket');
+      const filter = await response.data.filter(
+        (data) => data.tripUser._id === date,
+      );
+      await dispatch({type: 'ticketList', payload: filter});
     } else {
-      const response = await jsonServer.get('/api/trip');
-      await dispatch({type: 'tripList', payload: response.data});
+      const response = await jsonServer.get('/api/ticket');
+      await dispatch({type: 'ticketList', payload: response.data});
     }
   };
 };
 
 export const {Provider, Context} = createDataContext(
-  tripReducer,
+  ticketReducer,
   {
     add_error,
     clear_error_message,
-    addTrip,
-    getTripList,
+    addTicket,
+    getTicektList,
   },
   {},
 );
