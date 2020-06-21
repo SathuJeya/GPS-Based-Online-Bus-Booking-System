@@ -34,6 +34,7 @@ import TripList from '../screens/admin/TripList';
 import FindTrip from '../screens/user/FindTrip';
 import MyTrip from '../screens/user/MyTrip';
 import FindTripList from '../screens/user/FindTripList';
+import TripDetail from '../screens/user/TripDetail';
 
 import MyRides from '../screens/driver/MyRides';
 import RideDetail from '../screens/driver/RideDetail';
@@ -46,6 +47,10 @@ const iconSize = 24;
 const tripInfo = createStackNavigator({
   TripList: {screen: TripList},
   AddTrip: {screen: AddTrip},
+});
+const myTripInfo = createStackNavigator({
+    MyTrip: {screen: MyTrip},
+    TripDetail: {screen: TripDetail},
 });
 const findTripInfo = createStackNavigator({
   FindTrip: {screen: FindTrip},
@@ -153,7 +158,7 @@ const switchNavigator = createSwitchNavigator(
           },
         },
         MyTrip: {
-          screen: MyTrip,
+          screen: myTripInfo,
           navigationOptions: {
             tabBarLabel: 'My Trip',
             tabBarIcon: ({tintColor}) => (

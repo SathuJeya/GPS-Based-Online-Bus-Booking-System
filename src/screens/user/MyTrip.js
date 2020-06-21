@@ -21,45 +21,55 @@ const MyTrip = ({navigation}) => {
 
   return (
     <View>
-      {/*<Text>{JSON.stringify(state.ticket)}</Text>*/}
       <FlatList
         data={state.ticket}
         keyExtractor={(item) => item.id}
         renderItem={({item}) => (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('TripDetail', {TripId: item.id})
+              navigation.navigate('TripDetail', {TripId: item.trip._id})
             }>
             <Card style={{marginVertical: 7, marginHorizontal: 12}}>
-              <Card.Content>
-                <View style={{flexDirection: 'row', flex: 1}}>
-                  <Button style={{flex: 1}}>
-                    {item.trip.from.locationName}
-                  </Button>
-                  <Button style={{flex: 1}}>To</Button>
-                  <Button style={{flex: 1}}>
-                    {' '}
-                    {item.trip.to.locationName}
-                  </Button>
-                </View>
-                <View
-                  style={{flexDirection: 'row', flex: 1, alignSelf: 'center'}}>
-                  <Paragraph style={{flex: 1}}>
-                    {item.trip.bus.busName}
-                  </Paragraph>
-                  <Paragraph style={{flex: 1}}>
-                    {item.trip.bus.busNumber}
-                  </Paragraph>
-                  <Paragraph style={{flex: 1}}>{item.trip.bus.type}</Paragraph>
-                </View>
-                <View
-                  style={{flexDirection: 'row', flex: 1, alignSelf: 'center'}}>
-                  <Paragraph style={{flex: 1}}>{item.date}</Paragraph>
-                  <Paragraph style={{flex: 1}}>
-                    {item.noOfSeat} seats available
-                  </Paragraph>
-                </View>
-              </Card.Content>
+              {item.trip && (
+                <Card.Content>
+                  <View style={{flexDirection: 'row', flex: 1}}>
+                    <Button style={{flex: 1}}>
+                      {item.trip.from.locationName}
+                    </Button>
+
+                    <Button style={{flex: 1}}>To</Button>
+
+                    <Button style={{flex: 1}}>
+                      {item.trip.to.locationName}
+                    </Button>
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flex: 1,
+                      alignSelf: 'center',
+                    }}>
+                    <Paragraph style={{flex: 1}}>
+                      {item.trip.bus.busName}
+                    </Paragraph>
+                    <Paragraph style={{flex: 1}}>
+                      {item.trip.bus.busNumber}
+                    </Paragraph>
+                    <Paragraph style={{flex: 1}}>
+                      {item.trip.bus.type}
+                    </Paragraph>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flex: 1,
+                      alignSelf: 'center',
+                    }}>
+                    <Paragraph style={{flex: 1}}>{item.date}</Paragraph>
+                  </View>
+                </Card.Content>
+              )}
             </Card>
           </TouchableOpacity>
         )}

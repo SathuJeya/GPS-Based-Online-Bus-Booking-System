@@ -13,6 +13,7 @@ const FindTrip = ({navigation}) => {
       <Text style={{fontSize: 15, alignSelf: 'center', marginVertical: 10}}>
         SelectDate
       </Text>
+
       <DatePicker
         style={{width: 200, alignSelf: 'center'}}
         date={date}

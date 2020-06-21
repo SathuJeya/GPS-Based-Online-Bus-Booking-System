@@ -7,15 +7,15 @@ import {Button, Card, Paragraph} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const FindTripList = ({navigation}) => {
-  const {state, getTripList} = useContext(Context);
+  const {state, getTripListByDate, getAvailableSeat} = useContext(Context);
   const {state: userState} = useContext(UserContext);
   const {state: ticketState, addTicket} = useContext(TicketContext);
 
   const [date, setDate] = useState(navigation.getParam('date'));
   useEffect(() => {
-    getTripList(date);
+    getTripListByDate(date);
     const listiner = navigation.addListener('didFocus', async () => {
-      await getTripList(date);
+      await getTripListByDate(date);
     });
   }, []);
   if (state.trip == '') {
@@ -41,7 +41,8 @@ const FindTripList = ({navigation}) => {
         keyExtractor={(item) => item.id}
         renderItem={({item}) => (
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              getAvailableSeat(item.id);
               Alert.alert(
                 'Booking',
                 'Do you confirm to book this trip',
@@ -54,8 +55,8 @@ const FindTripList = ({navigation}) => {
                   {text: 'OK', onPress: () => booking(item.id)},
                 ],
                 {cancelable: false},
-              )
-            }>
+              );
+            }}>
             <Card style={{marginVertical: 7, marginHorizontal: 12}}>
               <Card.Content>
                 <View style={{flexDirection: 'row', flex: 1}}>
@@ -73,7 +74,6 @@ const FindTripList = ({navigation}) => {
                   style={{flexDirection: 'row', flex: 1, alignSelf: 'center'}}>
                   <Paragraph style={{flex: 1}}>{item.date}</Paragraph>
                   <Paragraph style={{flex: 1}}>
-                    {item.noOfSeat} seats available
                   </Paragraph>
                 </View>
               </Card.Content>

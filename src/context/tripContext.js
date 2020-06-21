@@ -12,6 +12,8 @@ const tripReducer = (state, action) => {
       return {...state, trip: action.payload};
     case 'tripListDetail':
       return {...state, tripDetail: action.payload};
+      case 'ticketListById':
+          return {...state, ticketListById: action.payload};
     default:
       return state;
   }
@@ -63,6 +65,31 @@ const addTrip = (dispatch) => {
   };
 };
 
+const updateTrip = (dispatch) => {
+  return async (id, latitude, longitude) => {
+    console.log({aaaaa: id});
+    const response = await jsonServer
+      .put(`/api/trip/${id}`, {
+        latitude: latitude,
+        longitude: longitude,
+      })
+      .then(() => {
+        console.log('sdsdsd');
+        console.log(response);
+        // dispatch({
+        //   type: 'add_error',
+        //   payload: 'success',
+        // });
+      })
+      .catch((err) =>
+        dispatch({
+          type: 'add_error',
+          payload: 'something wrong',
+        }),
+      );
+  };
+};
+
 const getTripList = (dispatch) => {
   return async (date) => {
     // alert(date)
@@ -79,15 +106,49 @@ const getTripList = (dispatch) => {
   };
 };
 
+const getTripListByDate = (dispatch) => {
+  return async (date) => {
+    // alert(date)
+    if (date) {
+      const response = await jsonServer.get('/api/trip');
+      const filter = await response.data.filter((data) => data.date === date);
+      await dispatch({type: 'tripList', payload: filter});
+    } else {
+      const response = await jsonServer.get('/api/trip');
+      await dispatch({type: 'tripList', payload: response.data});
+    }
+  };
+};
+const getAvailableSeat = (dispatch) => {
+  return async (trip) => {
+    // alert(date)
+    await console.log('sd');
+    const response = await jsonServer.get('/api/trip');
+    // await console.log(response);
+    // const filter = await response.data.filter((data) => data.date === trip);
+    // await dispatch({type: 'tripList', payload: filter});
+  };
+};
+
 const getTripDetail = (dispatch) => {
   return async (id) => {
-    // alert(date)
+    // alert(id);
     if (id) {
       const response = await jsonServer.get(`/api/trip/${id}`);
+      // await console.log(response.data);
       await dispatch({type: 'tripListDetail', payload: response.data});
     } else {
       console.log('id not found');
     }
+  };
+};
+
+const getTicketByTrip = (dispatch) => {
+  return async (id) => {
+    // alert(id);
+    const response = await jsonServer.get(`/api/ticketByTrip/${id}`);
+    // await console.log(response.data);
+    await dispatch({type: 'ticketListById', payload: response.data});
   };
 };
 
@@ -97,8 +158,12 @@ export const {Provider, Context} = createDataContext(
     add_error,
     clear_error_message,
     addTrip,
+    updateTrip,
+    getTicketByTrip,
     getTripList,
     getTripDetail,
+    getTripListByDate,
+    getAvailableSeat,
   },
   {},
 );

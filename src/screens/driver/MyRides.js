@@ -42,7 +42,7 @@ const MyRides = ({navigation}) => {
                   style={{flexDirection: 'row', flex: 1, alignSelf: 'center'}}>
                   <Paragraph style={{flex: 1}}>{item.date}</Paragraph>
                   <Paragraph style={{flex: 1}}>
-                    {item.noOfSeat} seats available
+
                   </Paragraph>
                 </View>
               </Card.Content>
